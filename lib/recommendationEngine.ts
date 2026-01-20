@@ -201,7 +201,7 @@ function generateReasonText(
     industry_interest: (answer) => {
       const interest = answer as string;
       if (interest === 'other') {
-        return 'You're interested in exploring unique industry paths';
+        return "You're interested in exploring unique industry paths";
       }
       const interestLabels: Record<string, string> = {
         technology_engineering: 'technology and engineering',
