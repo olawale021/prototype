@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAssessment } from '@/context/AssessmentContext';
@@ -10,12 +10,14 @@ export function Header() {
   const pathname = usePathname();
   const progress = getProgress();
   const hasProgress = progress > 0;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => pathname === path;
 
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/assessment', label: 'Assessment' },
+    { href: '/interview-prep', label: 'Interview Prep' },
     ...(state.isComplete ? [{ href: '/results', label: 'Results' }] : []),
   ];
 
@@ -48,7 +50,7 @@ export function Header() {
               </div>
             </Link>
 
-            {/* Navigation */}
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
@@ -65,14 +67,60 @@ export function Header() {
               ))}
             </div>
 
-            {/* CTA Button */}
+            {/* Desktop CTA Button */}
             <Link
               href={getButtonHref()}
-              className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-amber-400/25 text-sm"
+              className="hidden md:block bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-amber-400/25 text-sm"
             >
               {getButtonText()}
             </Link>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pt-4 border-t border-slate-200 dark:border-white/10">
+              <div className="flex flex-col gap-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive(link.href)
+                        ? 'bg-amber-400/20 text-amber-600 dark:text-amber-400'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Link
+                  href={getButtonHref()}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="mt-2 bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-4 py-2.5 rounded-lg transition-all text-sm text-center"
+                >
+                  {getButtonText()}
+                </Link>
+              </div>
+            </div>
+          )}
         </nav>
       </div>
     </header>

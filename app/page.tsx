@@ -155,7 +155,7 @@ export default function HomePage() {
         {/* CTA Section */}
         <div className="text-center mt-16 pt-10 border-t border-white/30 dark:border-white/10">
           <p className="text-sm text-slate-700 dark:text-slate-200 mb-4">
-            18 questions · About 5 minutes · Free
+            10 questions · About 2 minutes · Free
           </p>
           <Link href="/assessment">
             <Button size="lg" variant={hasProgress ? 'outline' : 'primary'}>

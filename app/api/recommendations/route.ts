@@ -26,16 +26,7 @@ function formatAnswersForPrompt(answers: UserAnswers): string {
 
     let answerText: string;
 
-    if (question.type === 'slider') {
-      const value = Number(answer);
-      const max = question.max || 10;
-      let level = 'medium';
-      if (value <= max * 0.33) level = 'LOW';
-      else if (value >= max * 0.67) level = 'HIGH';
-      else level = 'MEDIUM';
-
-      answerText = `${value}/${max} (${level})`;
-    } else if (question.type === 'multi-select') {
+    if (question.type === 'multi-select') {
       const values = answer as string[];
       const labels = values
         .map((v) => question.options?.find((o) => o.value === v)?.label || v)
@@ -70,21 +61,21 @@ export async function POST(request: NextRequest) {
     const systemPrompt = `You are an expert career advisor AI. Analyze the user's assessment answers carefully and recommend the top 3 most suitable industry categories.
 
 AVAILABLE INDUSTRIES (prefer these, but can recommend others if a better match exists):
-1. technology_engineering - Technology & Engineering: Software Engineer, Data Engineer, DevOps, IT Support, QA Engineer. Best for: strong technical/coding skills, enjoys building systems, prefers technical problem-solving
-2. business_management - Business, Management & Strategy: Product Manager, Operations Manager, Consultant, Business Analyst. Best for: strong communication, strategic thinking, leadership, enjoys coordinating teams
-3. finance_accounting - Finance & Accounting: Accountant, Financial Analyst, Investment Banker, Auditor. Best for: analytical skills, detail-oriented, enjoys numbers and financial analysis, prefers structure
-4. healthcare_life_sciences - Healthcare & Life Sciences: Doctor, Nurse, Public Health Analyst, Biomedical Scientist. Best for: helping others, research interest, analytical, enjoys meaningful impact
-5. education_training - Education & Training: Teacher, Lecturer, Instructional Designer, Corporate Trainer. Best for: communication skills, enjoys helping/teaching, patient, creative presentation
-6. creative_media_design - Creative, Media & Design: Graphic Designer, UX Designer, Content Creator, Video Producer. Best for: high creative skills, enjoys design/visual work, flexible work style
-7. marketing_sales - Marketing, Sales & Communication: Digital Marketer, Sales Executive, PR Manager, Growth Strategist. Best for: communication + creative skills, enjoys connecting with people, persuasion
-8. law_government - Law, Government & Public Services: Lawyer, Policy Analyst, Civil Servant, Diplomat. Best for: research/writing skills, enjoys structure, analytical, ethics-driven
-9. science_research - Science, Research & Data: Research Scientist, Data Scientist, Lab Analyst, Statistician. Best for: analytical skills, enjoys research/data, curious, detail-oriented
-10. manufacturing_construction - Manufacturing, Construction & Trades: Civil Engineer, Architect, Electrician, Construction Manager. Best for: technical + hands-on skills, enjoys building tangible things
-11. hospitality_service - Hospitality, Travel & Service: Hotel Manager, Event Planner, Travel Consultant, Customer Success. Best for: people skills, enjoys helping/connecting, service-oriented
-12. social_impact_nonprofit - Social Impact, Non-Profit & Community: NGO Program Manager, Social Worker, Fundraising Manager. Best for: purpose-driven, enjoys helping others, community focus
-13. beauty_fashion - Beauty, Fashion & Lifestyle: Fashion Designer, Stylist, Makeup Artist, Brand Buyer. Best for: high creative skills, eye for aesthetics, enjoys self-expression, people-oriented
+1. technology_engineering - Technology & Engineering: Software Engineer, Data Engineer, DevOps, IT Support, QA Engineer. Best for: technical skill strength, enjoys coding/problem-solving, prefers technical challenges
+2. business_management - Business, Management & Strategy: Product Manager, Operations Manager, Consultant, Business Analyst. Best for: communication + leadership skills, strategic work style, business challenges
+3. finance_accounting - Finance & Accounting: Accountant, Financial Analyst, Investment Banker, Auditor. Best for: technical/analytical skills, structured work style, analytical challenges
+4. healthcare_life_sciences - Healthcare & Life Sciences: Doctor, Nurse, Public Health Analyst, Biomedical Scientist. Best for: research skills, mission-driven style, enjoys healthcare/scientific work
+5. education_training - Education & Training: Teacher, Lecturer, Instructional Designer, Corporate Trainer. Best for: communication skills, mission-driven style, enjoys teaching/presenting
+6. creative_media_design - Creative, Media & Design: Graphic Designer, UX Designer, Content Creator, Video Producer. Best for: creative skill strength, independent style, creative challenges
+7. marketing_sales - Marketing, Sales & Communication: Digital Marketer, Sales Executive, PR Manager, Growth Strategist. Best for: communication + creative skills, dynamic style, enjoys connecting/negotiation
+8. law_government - Law, Government & Public Services: Lawyer, Policy Analyst, Civil Servant, Diplomat. Best for: research skills, structured style, people/analytical challenges
+9. science_research - Science, Research & Data: Research Scientist, Data Scientist, Lab Analyst, Statistician. Best for: research + technical skills, enjoys data analysis/scientific work
+10. manufacturing_construction - Manufacturing, Construction & Trades: Civil Engineer, Architect, Electrician, Construction Manager. Best for: technical skills, enjoys hands-on work/building
+11. hospitality_service - Hospitality, Travel & Service: Hotel Manager, Event Planner, Travel Consultant, Customer Success. Best for: communication skills, collaborative style, enjoys customer service/events
+12. social_impact_nonprofit - Social Impact, Non-Profit & Community: NGO Program Manager, Social Worker, Fundraising Manager. Best for: communication + leadership, mission-driven style, impact priority
+13. beauty_fashion - Beauty, Fashion & Lifestyle: Fashion Designer, Stylist, Makeup Artist, Brand Buyer. Best for: creative skills, dynamic style, enjoys design/styling
 
-CUSTOM INDUSTRIES: If the user selects "Other" for their industry interest or past experience, you SHOULD recommend custom industries that match their profile. Examples of custom industries:
+CUSTOM INDUSTRIES: If the user selects "Other" for their industry interest, you SHOULD recommend custom industries that match their profile. Examples:
 - sports_fitness: Sports, Fitness & Recreation (Coach, Personal Trainer, Sports Manager, Athletic Director)
 - entertainment_arts: Entertainment & Performing Arts (Actor, Producer, Talent Agent, Music Manager)
 - agriculture_environment: Agriculture, Food & Environment (Agronomist, Food Scientist, Environmental Consultant)
@@ -94,15 +85,15 @@ CUSTOM INDUSTRIES: If the user selects "Other" for their industry interest or pa
 
 Use snake_case for custom industry IDs and provide full details (title, description, exampleJobs).
 
-MATCHING RULES:
-- Technical skills 8-10 + enjoys coding → technology_engineering or science_research
-- Creative skills 8-10 + enjoys design → creative_media_design or marketing_sales
-- Communication skills 8-10 + enjoys leadership → business_management or education_training
-- Enjoys data analysis + analytical problems → science_research or finance_accounting
-- Prefers nonprofit environment + helping others → social_impact_nonprofit or healthcare_life_sciences
-- Prefers structured environment + detail-oriented → finance_accounting or law_government
-- Enjoys building physical things + technical → manufacturing_construction
-- Strong people skills + enjoys connecting → hospitality_service or marketing_sales
+MATCHING RULES (based on 10-question assessment):
+- Technical skill strength + enjoys coding → technology_engineering or science_research
+- Creative skill strength + enjoys design → creative_media_design or beauty_fashion
+- Communication skill strength + leadership → business_management or education_training
+- Research skill strength + enjoys data analysis → science_research or finance_accounting
+- Mission-driven work style + impact priority → social_impact_nonprofit or healthcare_life_sciences
+- Structured work style + security priority → finance_accounting or law_government
+- Technical skills + enjoys hands-on work → manufacturing_construction
+- Communication skills + dynamic style → hospitality_service or marketing_sales
 
 Respond with JSON containing "recommendations" array with exactly 3 matches:
 - "careerId": industry id in snake_case (e.g., "technology_engineering") - use predefined IDs when possible, or create descriptive IDs for custom industries
@@ -112,18 +103,19 @@ Respond with JSON containing "recommendations" array with exactly 3 matches:
 - "reasons": 3-4 specific reasons referencing their actual answers
 - "exampleJobs": array of 4-6 example job titles in this industry
 
-Be specific! Reference their exact skill levels, preferences, and what energizes them.`;
+Be specific! Reference their skill strengths, enjoyed skills, work style, and career priorities.`;
 
     const userPrompt = `Analyze these assessment answers and recommend the top 3 careers that best match this person:
 
 ${formattedAnswers}
 
 KEY INDICATORS TO CONSIDER:
-- Skill levels (1-3 = low, 4-6 = medium, 7-10 = high)
-- Skills they ENJOY using (most important for job satisfaction)
+- Skill strengths (technical, communication, creative, leadership, research)
+- Skills they ENJOY using (most important for job satisfaction - they selected up to 4)
 - What type of work ENERGIZES them
-- Preferred problem type and industry
-- Work environment and structure preferences
+- Preferred problem type and industry interest
+- Work style preference (independent, collaborative, structured, dynamic, mission-driven)
+- Career priority (compensation, balance, growth, impact, security)
 
 Return valid JSON only with your recommendations.`;
 

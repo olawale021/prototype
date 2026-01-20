@@ -9,13 +9,6 @@ interface ScoreContribution {
   contribution: number;
 }
 
-function getSliderLevel(value: number, max: number): 'low' | 'medium' | 'high' {
-  const normalized = value / max;
-  if (normalized <= 0.33) return 'low';
-  if (normalized <= 0.66) return 'medium';
-  return 'high';
-}
-
 function calculateCareerScore(
   career: CareerPath,
   answers: UserAnswers
@@ -35,23 +28,6 @@ function calculateCareerScore(
     let questionMaxScore = 0;
 
     switch (question.type) {
-      case 'slider': {
-        const numericAnswer = Number(answer);
-        const max = question.max || 10;
-        const level = getSliderLevel(numericAnswer, max);
-
-        const levelWeights = weights as Record<string, number>;
-        const maxWeight = Math.max(
-          levelWeights.low || 0,
-          levelWeights.medium || 0,
-          levelWeights.high || 0
-        );
-
-        questionScore = levelWeights[level] || 0;
-        questionMaxScore = maxWeight;
-        break;
-      }
-
       case 'multiple-choice': {
         const selectedValue = answer as string;
         const optionWeights = weights as Record<string, number>;
@@ -134,21 +110,49 @@ function generateReasonText(
   const { questionId, answerValue } = contribution;
 
   const reasonMappings: Record<string, (answer: string | string[] | number) => string | null> = {
-    technical_skills: (answer) => {
-      const level = getSliderLevel(Number(answer), 10);
-      if (level === 'high') return 'Your strong technical skills are highly valued';
-      if (level === 'medium') return 'Your technical abilities are a good foundation';
+    experience_background: (answer) => {
+      const bg = answer as string;
+      const bgLabels: Record<string, string> = {
+        student: 'Your fresh perspective as a student/new grad',
+        early_career: 'Your early career experience',
+        mid_career: 'Your solid mid-career experience',
+        senior: 'Your extensive senior-level experience',
+        career_changer: 'Your career change journey brings fresh perspective',
+      };
+      return bgLabels[bg] ? `${bgLabels[bg]} fits well` : null;
+    },
+    education_level: (answer) => {
+      const level = answer as string;
+      if (level === 'graduate') return 'Your advanced education is highly valued';
+      if (level === 'bachelors') return "Your bachelor's degree provides a strong foundation";
       return null;
     },
-    creative_skills: (answer) => {
-      const level = getSliderLevel(Number(answer), 10);
-      if (level === 'high') return 'Your creativity aligns well with this role';
+    skill_strengths: (answer) => {
+      const skills = answer as string[];
+      if (skills.includes('technical')) return 'Your strong technical skills are highly valued';
+      if (skills.includes('communication')) return 'Your communication skills are essential for success';
+      if (skills.includes('creative')) return 'Your creativity aligns well with this role';
+      if (skills.includes('leadership')) return 'Your leadership abilities are key for this path';
+      if (skills.includes('research')) return 'Your research skills are a great asset';
       return null;
     },
-    communication_skills: (answer) => {
-      const level = getSliderLevel(Number(answer), 10);
-      if (level === 'high') return 'Your communication skills are essential for success';
-      return null;
+    field_of_study: (answer) => {
+      const field = answer as string;
+      const fieldLabels: Record<string, string> = {
+        computer_science: 'Your CS/IT background',
+        engineering: 'Your engineering background',
+        business: 'Your business education',
+        finance_accounting: 'Your finance background',
+        healthcare_medicine: 'Your healthcare education',
+        science: 'Your science background',
+        arts_humanities: 'Your arts background',
+        social_sciences: 'Your social sciences education',
+        education: 'Your education background',
+        law: 'Your legal studies',
+        design_media: 'Your design/media education',
+        trades_vocational: 'Your vocational training',
+      };
+      return fieldLabels[field] ? `${fieldLabels[field]} is a great match` : null;
     },
     enjoyed_skills: (answer) => {
       const skills = answer as string[];
@@ -166,6 +170,10 @@ function generateReasonText(
       if (skills.includes('legal_policy')) return 'Your legal and policy analysis skills are key';
       if (skills.includes('scientific_lab')) return 'Your scientific and lab work experience is valued';
       if (skills.includes('event_planning')) return 'Your event planning skills are a great match';
+      if (skills.includes('writing')) return 'Your writing skills are a great asset';
+      if (skills.includes('research')) return 'Your research skills are highly valued';
+      if (skills.includes('collaboration')) return 'You excel at team collaboration';
+      if (skills.includes('negotiation')) return 'Your negotiation skills are a strong match';
       return null;
     },
     work_energizes: (answer) => {
@@ -175,6 +183,9 @@ function generateReasonText(
       if (activities.includes('creating')) return 'Creating content energizes you';
       if (activities.includes('analyzing')) return 'Analytical work motivates you';
       if (activities.includes('helping')) return 'Helping others drives your work';
+      if (activities.includes('connecting')) return 'You thrive on connecting with people';
+      if (activities.includes('optimizing')) return 'You enjoy optimizing and improving processes';
+      if (activities.includes('learning')) return 'Your love of learning fits well';
       return null;
     },
     problem_type: (answer) => {
@@ -187,30 +198,6 @@ function generateReasonText(
         analytical: 'diving into analytical problems',
       };
       return `You prefer ${typeLabels[type] || type}`;
-    },
-    work_environment: (answer) => {
-      const env = answer as string;
-      const envLabels: Record<string, string> = {
-        startup: 'startup environments',
-        corporate: 'corporate settings',
-        agency: 'agency work',
-        consulting: 'consulting roles',
-        freelance: 'independent work',
-        nonprofit: 'mission-driven organizations',
-        hospital_clinic: 'healthcare settings',
-        school_university: 'educational institutions',
-        government: 'public sector work',
-        factory_industrial: 'industrial environments',
-        hotel_restaurant: 'hospitality settings',
-        research_lab: 'research institutions',
-      };
-      return `Your preference for ${envLabels[env] || env} aligns well`;
-    },
-    structure_preference: (answer) => {
-      const level = getSliderLevel(Number(answer), 10);
-      if (level === 'low') return 'You thrive with flexibility and autonomy';
-      if (level === 'high') return 'You work well in structured environments';
-      return null;
     },
     industry_interest: (answer) => {
       const interest = answer as string;
@@ -233,6 +220,28 @@ function generateReasonText(
         beauty_fashion: 'beauty, fashion and lifestyle',
       };
       return `Your interest in ${interestLabels[interest] || interest} fits perfectly`;
+    },
+    work_style: (answer) => {
+      const style = answer as string;
+      const styleLabels: Record<string, string> = {
+        independent: 'independent and flexible work',
+        collaborative: 'collaborative team environments',
+        structured: 'structured corporate settings',
+        dynamic: 'dynamic startup environments',
+        mission_driven: 'mission-driven organizations',
+      };
+      return `Your preference for ${styleLabels[style] || style} aligns well`;
+    },
+    career_priority: (answer) => {
+      const priority = answer as string;
+      const priorityLabels: Record<string, string> = {
+        compensation: 'high earning potential',
+        balance: 'work-life balance',
+        growth: 'continuous learning and growth',
+        impact: 'meaningful impact',
+        security: 'job stability and security',
+      };
+      return priorityLabels[priority] ? `This path offers ${priorityLabels[priority]}` : null;
     },
   };
 

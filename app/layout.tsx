@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { AssessmentProvider } from '@/context/AssessmentContext'
+import { InterviewProvider } from '@/context/InterviewContext'
 import { Header } from '@/components/ui/Header'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -29,10 +30,12 @@ export default function RootLayout({
         }}
       >
         <AssessmentProvider>
-          <Header />
-          <main className="pt-24">
-            {children}
-          </main>
+          <InterviewProvider>
+            <Header />
+            <main className="pt-24">
+              {children}
+            </main>
+          </InterviewProvider>
         </AssessmentProvider>
       </body>
     </html>

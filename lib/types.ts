@@ -1,4 +1,4 @@
-export type QuestionCategory = 'experience' | 'skills' | 'interests' | 'preferences' | 'goals';
+export type QuestionCategory = 'background' | 'skills' | 'interests' | 'preferences' | 'goals';
 
 export type QuestionType = 'multiple-choice' | 'multi-select' | 'slider' | 'text';
 
