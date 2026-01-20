@@ -11,7 +11,7 @@ export default function HomePage() {
   const hasProgress = progress > 0;
 
   return (
-    <div className="bg-white/40 dark:bg-slate-900/60">
+    <div className="">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center max-w-2xl mx-auto mb-20">
@@ -159,7 +159,7 @@ export default function HomePage() {
           </p>
           <Link href="/assessment">
             <Button size="lg" variant={hasProgress ? 'outline' : 'primary'}>
-              {hasProgress ? 'Continue Assessment' : 'Get Started'}
+              {hasProgress ? 'Continue Assessment' : 'About Us'}
             </Button>
           </Link>
         </div>

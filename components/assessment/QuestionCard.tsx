@@ -70,9 +70,9 @@ export function QuestionCard({
   };
 
   return (
-    <Card className="w-full max-w-xl mx-auto">
-      <CardHeader>
-        <div className="flex items-center gap-2 mb-3">
+    <Card className="w-full max-w-xl mx-auto" padding="sm">
+      <CardHeader className="mb-2">
+        <div className="flex items-center gap-2 mb-2">
           <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
             {questionNumber} of {totalQuestions}
           </span>
@@ -80,9 +80,9 @@ export function QuestionCard({
             <span className="text-xs text-slate-600 dark:text-slate-300">· Required</span>
           )}
         </div>
-        <CardTitle className="text-lg">{question.question}</CardTitle>
+        <CardTitle className="text-base">{question.question}</CardTitle>
         {question.description && (
-          <CardDescription className="text-sm mt-1.5">
+          <CardDescription className="text-sm mt-1">
             {question.description}
           </CardDescription>
         )}

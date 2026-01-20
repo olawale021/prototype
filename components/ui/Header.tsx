@@ -22,7 +22,7 @@ export function Header() {
   const getButtonText = () => {
     if (hasProgress && !state.isComplete) return `Continue (${progress}%)`;
     if (state.isComplete) return 'View Results';
-    return 'Get Started';
+    return 'About Us';
   };
 
   const getButtonHref = () => {

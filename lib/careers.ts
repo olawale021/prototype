@@ -17,6 +17,7 @@ export const careerPaths: CareerPath[] = [
         data_analysis: 1.5,
         research: 1.2,
         collaboration: 0.8,
+        scientific_lab: 0.8,
       },
       work_energizes: {
         building: 2.0,
@@ -234,6 +235,8 @@ export const careerPaths: CareerPath[] = [
         collaboration: 1.3,
         data_analysis: 1.2,
         writing: 1.0,
+        healthcare: 2.0,
+        scientific_lab: 1.5,
       },
       work_energizes: {
         helping: 2.0,
@@ -260,6 +263,8 @@ export const careerPaths: CareerPath[] = [
         consulting: 0.8,
         agency: 0.3,
         freelance: 0.5,
+        hospital_clinic: 2.0,
+        research_lab: 1.5,
       },
       team_size: {
         medium: 1.5,
@@ -306,6 +311,7 @@ export const careerPaths: CareerPath[] = [
         collaboration: 1.3,
         research: 1.2,
         leadership: 1.0,
+        teaching: 2.0,
       },
       work_energizes: {
         helping: 2.0,
@@ -332,6 +338,7 @@ export const careerPaths: CareerPath[] = [
         startup: 0.8,
         consulting: 1.0,
         agency: 0.5,
+        school_university: 2.0,
       },
       team_size: {
         small: 1.5,
@@ -378,6 +385,7 @@ export const careerPaths: CareerPath[] = [
         presenting: 1.2,
         collaboration: 1.0,
         problem_solving: 1.0,
+        styling: 1.5,
       },
       work_energizes: {
         creating: 2.0,
@@ -450,6 +458,8 @@ export const careerPaths: CareerPath[] = [
         negotiation: 1.8,
         collaboration: 1.3,
         data_analysis: 1.0,
+        customer_service: 1.2,
+        event_planning: 1.0,
       },
       work_energizes: {
         connecting: 2.0,
@@ -522,6 +532,7 @@ export const careerPaths: CareerPath[] = [
         presenting: 1.5,
         negotiation: 1.5,
         problem_solving: 1.2,
+        legal_policy: 2.0,
       },
       work_energizes: {
         helping: 1.8,
@@ -548,6 +559,7 @@ export const careerPaths: CareerPath[] = [
         startup: 0.5,
         freelance: 0.8,
         agency: 0.5,
+        government: 2.0,
       },
       team_size: {
         medium: 1.5,
@@ -594,6 +606,7 @@ export const careerPaths: CareerPath[] = [
         problem_solving: 1.5,
         writing: 1.2,
         coding: 1.0,
+        scientific_lab: 2.0,
       },
       work_energizes: {
         analyzing: 2.0,
@@ -620,6 +633,7 @@ export const careerPaths: CareerPath[] = [
         consulting: 1.0,
         freelance: 0.8,
         agency: 0.4,
+        research_lab: 2.0,
       },
       team_size: {
         small: 1.8,
@@ -666,6 +680,7 @@ export const careerPaths: CareerPath[] = [
         leadership: 1.2,
         design: 1.0,
         data_analysis: 0.8,
+        hands_on_work: 2.0,
       },
       work_energizes: {
         building: 2.0,
@@ -692,6 +707,7 @@ export const careerPaths: CareerPath[] = [
         consulting: 0.8,
         nonprofit: 0.5,
         agency: 0.5,
+        factory_industrial: 2.0,
       },
       team_size: {
         medium: 1.5,
@@ -738,6 +754,8 @@ export const careerPaths: CareerPath[] = [
         negotiation: 1.2,
         leadership: 1.2,
         problem_solving: 1.0,
+        customer_service: 2.0,
+        event_planning: 1.8,
       },
       work_energizes: {
         helping: 2.0,
@@ -764,6 +782,7 @@ export const careerPaths: CareerPath[] = [
         nonprofit: 0.8,
         agency: 1.2,
         consulting: 0.6,
+        hotel_restaurant: 2.0,
       },
       team_size: {
         medium: 1.5,
@@ -811,6 +830,8 @@ export const careerPaths: CareerPath[] = [
         leadership: 1.5,
         negotiation: 1.2,
         research: 1.0,
+        teaching: 1.2,
+        customer_service: 1.0,
       },
       work_energizes: {
         helping: 2.0,
@@ -883,6 +904,8 @@ export const careerPaths: CareerPath[] = [
         collaboration: 1.3,
         negotiation: 1.2,
         writing: 1.0,
+        styling: 2.0,
+        customer_service: 1.5,
       },
       work_energizes: {
         creating: 2.0,

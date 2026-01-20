@@ -158,6 +158,14 @@ function generateReasonText(
       if (skills.includes('data_analysis')) return 'You enjoy working with data and analysis';
       if (skills.includes('problem_solving')) return 'Your problem-solving passion is key';
       if (skills.includes('presenting')) return 'Your presentation skills will shine';
+      if (skills.includes('teaching')) return 'Your passion for teaching and mentoring fits well';
+      if (skills.includes('customer_service')) return 'Your customer service skills are valuable here';
+      if (skills.includes('hands_on_work')) return 'Your hands-on skills are essential for this path';
+      if (skills.includes('healthcare')) return 'Your healthcare and patient care skills align perfectly';
+      if (skills.includes('styling')) return 'Your styling and aesthetics sense fits this industry';
+      if (skills.includes('legal_policy')) return 'Your legal and policy analysis skills are key';
+      if (skills.includes('scientific_lab')) return 'Your scientific and lab work experience is valued';
+      if (skills.includes('event_planning')) return 'Your event planning skills are a great match';
       return null;
     },
     work_energizes: (answer) => {
@@ -189,6 +197,12 @@ function generateReasonText(
         consulting: 'consulting roles',
         freelance: 'independent work',
         nonprofit: 'mission-driven organizations',
+        hospital_clinic: 'healthcare settings',
+        school_university: 'educational institutions',
+        government: 'public sector work',
+        factory_industrial: 'industrial environments',
+        hotel_restaurant: 'hospitality settings',
+        research_lab: 'research institutions',
       };
       return `Your preference for ${envLabels[env] || env} aligns well`;
     },

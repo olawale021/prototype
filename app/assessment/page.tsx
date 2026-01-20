@@ -57,7 +57,7 @@ export default function AssessmentPage() {
   );
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-4 px-4 pb-24">
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -76,12 +76,12 @@ export default function AssessmentPage() {
         </div>
 
         {/* Progress */}
-        <div className="mb-8">
+        <div className="mb-4">
           <ProgressBar progress={progress} size="md" />
         </div>
 
         {/* Category Pills */}
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
+        <div className="flex flex-wrap gap-2 justify-center mb-4">
           {questionCategories.map((category) => {
             const categoryQuestions = questions.filter(
               (q) => q.category === category.id
@@ -95,16 +95,33 @@ export default function AssessmentPage() {
               currentStep >= firstIndex && currentStep <= lastIndex;
             const isCompleted = currentStep > lastIndex;
 
+            // Check if user can navigate to this category
+            const canNavigate = () => {
+              // Always allow going back to completed categories
+              if (isCompleted || isCurrent) return true;
+              // Only allow going forward if current question is answered
+              return canProceed();
+            };
+
+            const handleCategoryClick = () => {
+              if (canNavigate()) {
+                setStep(firstIndex);
+              }
+            };
+
             return (
               <button
                 key={category.id}
-                onClick={() => setStep(firstIndex)}
+                onClick={handleCategoryClick}
+                disabled={!canNavigate()}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 backdrop-blur-xl ${
                   isCurrent
                     ? 'bg-amber-400 text-slate-900 shadow-lg shadow-amber-400/25'
                     : isCompleted
                     ? 'bg-white/50 dark:bg-white/15 text-slate-700 dark:text-slate-200 border border-white/40 dark:border-white/20'
-                    : 'bg-white/40 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-white/40 dark:border-white/20 hover:bg-white/60 dark:hover:bg-white/20'
+                    : canNavigate()
+                    ? 'bg-white/40 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-white/40 dark:border-white/20 hover:bg-white/60 dark:hover:bg-white/20'
+                    : 'bg-white/20 dark:bg-white/5 text-slate-400 dark:text-slate-500 border border-white/20 dark:border-white/10 cursor-not-allowed'
                 }`}
               >
                 <Image
@@ -130,7 +147,7 @@ export default function AssessmentPage() {
         />
 
         {/* Navigation */}
-        <div className="flex justify-between items-center mt-8">
+        <div className="flex justify-between items-center mt-4">
           <Button
             variant="ghost"
             onClick={handlePrevious}
@@ -160,21 +177,26 @@ export default function AssessmentPage() {
         </div>
 
         {/* Quick Navigation Dots */}
-        <div className="flex justify-center gap-1.5 mt-8 flex-wrap">
+        <div className="flex justify-center gap-1.5 mt-4 flex-wrap">
           {questions.map((_, index) => {
             const isAnswered = answers[questions[index].id] !== undefined;
             const isCurrent = index === currentStep;
+            // Can only navigate to answered questions, current, or next if current is answered
+            const canNavigateToDot = isAnswered || isCurrent || (index === currentStep + 1 && canProceed()) || index < currentStep;
 
             return (
               <button
                 key={index}
-                onClick={() => setStep(index)}
+                onClick={() => canNavigateToDot && setStep(index)}
+                disabled={!canNavigateToDot}
                 className={`w-2 h-2 rounded-full transition-all ${
                   isCurrent
                     ? 'bg-amber-400 ring-2 ring-amber-200 dark:ring-amber-800'
                     : isAnswered
                     ? 'bg-slate-400 dark:bg-slate-500 hover:bg-slate-500'
-                    : 'bg-slate-200 dark:bg-slate-700 hover:bg-slate-300'
+                    : canNavigateToDot
+                    ? 'bg-slate-200 dark:bg-slate-700 hover:bg-slate-300'
+                    : 'bg-slate-200/50 dark:bg-slate-800 cursor-not-allowed'
                 }`}
                 title={`Question ${index + 1}`}
               />
