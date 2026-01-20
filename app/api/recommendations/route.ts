@@ -4,9 +4,12 @@ import { careerPaths } from '@/lib/careers';
 import { questions } from '@/lib/questions';
 import { UserAnswers, CareerRecommendation } from '@/lib/types';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI client lazily to avoid build-time errors
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 const AVAILABLE_CAREERS = careerPaths.map((c) => ({
   id: c.id,
@@ -124,6 +127,7 @@ KEY INDICATORS TO CONSIDER:
 
 Return valid JSON only with your recommendations.`;
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
